@@ -24,3 +24,45 @@ function App() {
 }
 
 export default App;
+
+
+const elementObj = {
+  PROCESSED: [
+    { color: { true: "red", false: "" }, content: "Uncheck" },
+    { color: { true: "red", false: "" }, content: "Wait Archives Group Check" },
+    {
+      color: { true: "red", false: "" },
+      content: "Wait Risk Management Group Check",
+    },
+    { color: { true: "red", false: "" }, content: "Check" },
+  ],
+  DATA_UNMATCH: [
+    null,
+    null,
+    null,
+    null,
+    { color: { true: "red", false: "" }, content: "Wait Archives Group Check" },
+    { color: { true: "red", false: "" }, content: "Check" },
+  ],
+};
+const colorObj = {
+  PROCESSED: [
+    filesOperate || riskOperate,
+    filesOperate,
+    riskOperate,
+    operateOperate,
+  ],
+  DATA_UNMATCH: [false, false, false, false, filesOperate, brokerOperate],
+};
+const colorFlag1 = colorObj[recorder.state] || [];
+const colorFlag = colorFlag1[val] || false;
+
+const elementFlag = elementObj[recorder.state] || [
+  { color: { true: "", false: "" }, content: "" },
+];
+const { color, content } = elementFlag[val] || {
+  color: { true: "", false: "" },
+  content: "-",
+};
+
+return <span style={{ color: color[colorFlag] }}>{content}</span>;
