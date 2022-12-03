@@ -1,21 +1,21 @@
 import React from "react";
+import { Layout } from "antd";
+import { Nav } from "@/component/content/nav";
+
+import "@/assets/css/App.css";
+
+const { Header, Footer, Content } = Layout;
 
 function App(): JSX.Element {
   return (
     <div className="App">
-      <header className="App-header">
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Layout className="App_Layout">
+        <Header className="App_Header">
+          <Nav></Nav>
+        </Header>
+        <Content className="App_Content">Content</Content>
+        <Footer className="App_Footer">Footer</Footer>
+      </Layout>
     </div>
   );
 }
