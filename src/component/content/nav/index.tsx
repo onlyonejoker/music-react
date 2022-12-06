@@ -4,7 +4,7 @@ import React, { useState } from "react";
 // import { RootState } from "@/store";
 import { Col, Row } from "antd";
 import { SearchInput } from "./search";
-import { IsLogin, NotLogin } from "./login";
+import { Login } from "./login";
 
 import "./css/index.css";
 
@@ -21,7 +21,7 @@ const Nav = (): JSX.Element => {
           <SearchInput></SearchInput>
         </Col>
         <Col span={8} className="Nav_Col">
-          {isLogin ? <IsLogin></IsLogin> : <NotLogin></NotLogin>}
+          <Login isLogin={isLogin}></Login>
         </Col>
         <div></div>
       </Row>

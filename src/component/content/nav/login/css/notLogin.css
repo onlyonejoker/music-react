@@ -1,0 +1,10 @@
+.Not_Login {
+  cursor: pointer;
+}
+.Not_Login .Click_Login {
+  display: flex;
+  align-items: center;
+}
+.Not_Login .Click_Login > span:nth-child(2) {
+  margin: 0 1rem;
+}
