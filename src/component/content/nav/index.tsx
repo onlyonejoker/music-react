@@ -1,7 +1,9 @@
 import React, { useState } from "react";
-// import { useSelector, useDispatch } from "react-redux";
-// import { increment, decrement, incrementByAmount } from "@/store/loginModules";
-// import { RootState } from "@/store";
+
+import { useSelector, useDispatch } from "react-redux";
+
+import { RootState } from "@/store";
+
 import { Col, Row } from "antd";
 import { SearchInput } from "./search";
 import { Login } from "./login";
@@ -9,7 +11,7 @@ import { Login } from "./login";
 import "./css/index.css";
 
 const Nav = (): JSX.Element => {
-  const [isLogin] = useState(false);
+  const isLogin = useSelector((state: RootState) => state.login.loginState);
   return (
     <div className="Nav">
       <Row className="Nav_Row">

@@ -1,8 +1,29 @@
 import React, { useState, useEffect } from "react";
-import { Modal, Button, Form, Input } from "antd";
-import { phoneLogin } from "@/request/index";
+import { Modal, Button, Form, Input, Select } from "antd";
+import type { FormRule } from "antd";
+import {
+  phoneLogin,
+  getQrKey,
+  getQrImg,
+  emailLogin,
+  sendVerCode,
+  getCountryCode,
+} from "@/request/index";
+
+import { useSelector, useDispatch } from "react-redux";
+import { setLoginState, setLoginInfo } from "@/store/loginModules";
+
+import { useRequest } from "@/assets/js/publicHooks";
 
 import "./css/loginModal.css";
+const { Option } = Select;
+
+// const [qrImg, setQrImg] = useState();
+// useRequest([qrImg, setQrImg], async () => {
+//   const keyRes = await getQrKey();
+//   const imgRes = await getQrImg(keyRes.unikey);
+//   setQrImg(imgRes.qrimg);
+// });
 
 interface propsType {
   isLoginModalOpen: boolean;
@@ -13,11 +34,12 @@ interface useActiveReturnType {
   active: number;
   hContent: string[];
   title: JSX.Element;
-}
-
-interface usePhoneLoginReturnType {
-  phoneLoginState: any;
-  submit: (form: any) => any;
+  FormRules: Array<{
+    accountRules: FormRule[];
+    accountPlaceholder: string;
+    passwordRules: FormRule[];
+    passwordPlaceholder: string;
+  }>;
 }
 
 const useActive = (): useActiveReturnType => {
@@ -62,30 +84,104 @@ const useActive = (): useActiveReturnType => {
       </span>
     </div>
   );
-  return { active, hContent, title };
+  const FormRules = [
+    {
+      accountRules: [
+        { required: true, message: "请输入正确的手机号" },
+        {
+          pattern:
+            /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/,
+          message: "手机号格式不对",
+        },
+      ],
+      accountPlaceholder: "请输入账号/手机号",
+      passwordRules: [
+        { required: true, message: "请输入密码" },
+        {
+          pattern: /^(?=.*\d)(?=.*[a-zA-Z])[a-zA-Z0-9]{5,16}$/,
+          message: "请输入6-16位的密码，必须包含一个数字和一个字母",
+        },
+      ],
+      passwordPlaceholder: "请输入密码",
+    },
+    {
+      accountRules: [
+        { required: true, message: "请输入正确的手机号" },
+        {
+          pattern:
+            /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/,
+          message: "手机号格式不对",
+        },
+      ],
+      accountPlaceholder: "请输入账号/手机号",
+      passwordRules: [
+        { required: true, message: "请输入密码" },
+        {
+          pattern: /^(?=.*\d)(?=.*[a-zA-Z])[a-zA-Z0-9]{5,16}$/,
+          message: "请输入6-16位的密码，必须包含一个数字和一个字母",
+        },
+      ],
+      passwordPlaceholder: "请输入短信验证码",
+    },
+  ];
+  return { active, hContent, title, FormRules };
 };
 
-const usePhoneLogin = (
-  form: any,
-  props: propsType
-): usePhoneLoginReturnType => {
-  const [phoneLoginState, setState] = useState(null);
+const useAsyncPhoneLogin = (form: any, props: propsType): any => {
+  const loginStateDispatch = useDispatch();
+  const loginInfoDispatch = useDispatch();
+
   const submit = (): any => {
     (async () => {
       const loginState = await phoneLogin(form.getFieldsValue());
-      setState(loginState);
-      loginState?.loginType === 1 && props.setIsLoginModalOpen(false);
+      if (loginState?.loginType === 1) {
+        props.setIsLoginModalOpen(false);
+        loginStateDispatch(setLoginState(true));
+        loginInfoDispatch(setLoginInfo(loginState));
+      }
     })();
   };
 
-  return { phoneLoginState, submit };
+  return { submit };
+};
+
+const useAsyncEmailLogin = (form: any, props: propsType): any => {
+  const loginStateDispatch = useDispatch();
+  const loginInfoDispatch = useDispatch();
+
+  const submit = (): any => {
+    (async () => {
+      const loginState = await emailLogin(form.getFieldsValue());
+      if (loginState?.loginType === 1) {
+        props.setIsLoginModalOpen(false);
+        loginStateDispatch(setLoginState(true));
+        loginInfoDispatch(setLoginInfo(loginState));
+      }
+    })();
+  };
+
+  return { submit };
+};
+const useAsyncCountryCode = (isLoginModalOpen: boolean): any => {
+  const [countryCode, setCountryCode] = useState([]);
+
+  useEffect(() => {
+    (async () => {
+      if (countryCode.length > 0 || !isLoginModalOpen) return;
+      const { data } = await getCountryCode();
+      setCountryCode(data);
+    })();
+  }, [isLoginModalOpen]);
+
+  console.log(countryCode);
+  return countryCode;
 };
 
 const LoginModal = (props: propsType): JSX.Element => {
   const { active, hContent, title } = useActive();
   const [form] = Form.useForm();
-  const { phoneLoginState, submit } = usePhoneLogin(form, props);
-  console.log(phoneLoginState);
+  const { submit } = useAsyncPhoneLogin(form, props);
+  const countryCode = useAsyncCountryCode(props.isLoginModalOpen);
   return (
     <Modal
       title={title}
@@ -108,7 +204,7 @@ const LoginModal = (props: propsType): JSX.Element => {
         autoComplete="off"
         form={form}
       >
-        <Form.Item
+        {/* <Form.Item
           label=""
           name="phone"
           rules={[
@@ -121,6 +217,30 @@ const LoginModal = (props: propsType): JSX.Element => {
           ]}
         >
           <Input placeholder="请输入账号/手机号" />
+        </Form.Item> */}
+        <Form.Item label="">
+          <Input.Group compact>
+            <Form.Item name={["phone", "code"]} noStyle>
+              <Select placeholder="+86">
+                <Option value="Zhejiang">Zhejiang</Option>
+                <Option value="Jiangsu">Jiangsu</Option>
+              </Select>
+            </Form.Item>
+            <Form.Item
+              name={["phone", "phone"]}
+              noStyle
+              rules={[
+                { required: true, message: "请输入正确的手机号" },
+                {
+                  pattern:
+                    /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/,
+                  message: "手机号格式不对",
+                },
+              ]}
+            >
+              <Input placeholder="请输入账号/手机号" />
+            </Form.Item>
+          </Input.Group>
         </Form.Item>
 
         <Form.Item

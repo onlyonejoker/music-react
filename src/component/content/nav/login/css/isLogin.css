@@ -1,0 +1,30 @@
+.Is_Login {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.Is_Login .ant-avatar {
+  margin-right: 1rem;
+}
+.Is_Login .Is_Login_menu {
+  position: absolute;
+  top: 4.4rem;
+  width: 10rem;
+  line-height: 2.6rem;
+  overflow: hidden;
+  height: 0;
+  transition: all 0.3s;
+}
+.Is_Login .Is_Login_menu li {
+  text-align: center;
+  background-color: #fff;
+}
+.Is_Login .Is_Login_menu li:hover {
+  background-color: #99999911;
+}
+.Is_Login .Is_Login_menu_active {
+  height: 13rem;
+  transition: all 0.3s;
+}

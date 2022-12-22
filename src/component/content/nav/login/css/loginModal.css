@@ -59,3 +59,28 @@
   width: 31.4rem;
   height: 4.8rem;
 }
+.ant-modal-body #basic .ant-row .ant-col .ant-input-group {
+  display: flex;
+  height: 4.8rem;
+}
+.ant-modal-body #basic .ant-row .ant-col .ant-input-group .ant-select-selector {
+  height: 4.8rem;
+  width: 6.2rem;
+  padding: 0 0.4rem;
+}
+.ant-modal-body #basic .ant-row .ant-col .ant-input-group .ant-select-selector #basic_phone_code {
+  height: 4.8rem;
+}
+.ant-modal-body #basic .ant-row .ant-col .ant-input-group .ant-select-selector .ant-select-selection-placeholder {
+  padding-right: 0.8rem;
+  line-height: 4.8rem;
+  color: #000000e0;
+  text-align: center;
+  font-size: 1.4rem;
+}
+.ant-modal-body #basic .ant-row .ant-col .ant-input-group .ant-select-arrow {
+  top: 55%;
+}
+.ant-select-dropdown {
+  width: 18rem !important;
+}

@@ -1,5 +1,8 @@
 .Not_Login {
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .Not_Login .Click_Login {
   display: flex;

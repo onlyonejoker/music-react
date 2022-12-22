@@ -26,6 +26,7 @@
         "no-debugger":0,
         "@typescript-eslint/member-delimiter-style":0,
         "@typescript-eslint/no-floating-promises":0,
-        "@typescript-eslint/no-unused-vars":0
+        "@typescript-eslint/no-unused-vars":0,
+        "multiline-ternary":0
     }
 }

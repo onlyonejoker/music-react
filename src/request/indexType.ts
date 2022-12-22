@@ -13,8 +13,18 @@ interface phoneLoginType extends timestampType, passwordType {
   captcha?: string;
 }
 
+interface verificationCodeType extends timestampType {
+  phone: string;
+  countrycode?: string;
+}
+
 interface emailLoginType extends timestampType, passwordType {
   email: string;
 }
 
-export type { timestampType, phoneLoginType, emailLoginType };
+export type {
+  timestampType,
+  phoneLoginType,
+  emailLoginType,
+  verificationCodeType,
+};

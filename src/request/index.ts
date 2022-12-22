@@ -1,4 +1,14 @@
-export { phoneLogin, emailLogin, getQrKey, getQrImg } from "./login";
+export {
+  phoneLogin,
+  emailLogin,
+  getQrKey,
+  getQrImg,
+  loginState,
+  logout,
+  sendVerCode,
+  getCountryCode,
+} from "./login";
+
 export type {
   timestampType,
   phoneLoginType,

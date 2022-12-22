@@ -3,22 +3,20 @@ import { createSlice } from "@reduxjs/toolkit";
 export const loginModules = createSlice({
   name: "loginModules",
   initialState: {
-    value: 0,
+    loginState: false,
+    loginInfo: null as any,
   },
   reducers: {
-    increment: (state) => {
-      state.value += 1;
+    setLoginState: (state, action) => {
+      state.loginState = action.payload;
     },
-    decrement: (state) => {
-      state.value -= 1;
-    },
-    incrementByAmount: (state, action) => {
-      state.value += action.payload;
+    setLoginInfo: (state, action) => {
+      state.loginInfo = action.payload;
     },
   },
 });
 
 // reducer方法的每一个case都会生成一个Action
-export const { increment, decrement, incrementByAmount } = loginModules.actions;
+export const { setLoginState, setLoginInfo } = loginModules.actions;
 
 export default loginModules.reducer;
