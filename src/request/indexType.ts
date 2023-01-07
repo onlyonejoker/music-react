@@ -3,7 +3,7 @@ interface timestampType {
 }
 
 interface passwordType {
-  password: string;
+  password?: string;
   md5_password?: string;
 }
 

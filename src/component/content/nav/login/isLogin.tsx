@@ -56,11 +56,13 @@ const IsLogin = (): JSX.Element => {
   const loginInfo = useSelector((state: RootState) => state.login.loginInfo);
   const { active, onMouseLeave, onMouseEnter } = useActive();
   const Menu = jsxMenu(active);
+  const userName =
+    (loginInfo?.profile?.nickname as boolean) || loginInfo?.account?.userName;
   return (
     <div className="Is_Login">
       <div onMouseLeave={onMouseLeave} onMouseEnter={onMouseEnter}>
         <Avatar src={loginInfo?.profile?.avatarUrl} style={{ width: 32 }} />
-        <span>{loginInfo.profile.nickname}</span>
+        <span>{userName}</span>
         {Menu}
       </div>
     </div>

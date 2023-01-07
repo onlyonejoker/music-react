@@ -13,8 +13,6 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import { setLoginState, setLoginInfo } from "@/store/loginModules";
 
-import { useRequest } from "@/assets/js/publicHooks";
-
 import "./css/loginModal.css";
 const { Option } = Select;
 
@@ -34,14 +32,86 @@ interface useActiveReturnType {
   active: number;
   hContent: string[];
   title: JSX.Element;
-  FormRules: Array<{
-    accountRules: FormRule[];
-    accountPlaceholder: string;
-    passwordRules: FormRule[];
-    passwordPlaceholder: string;
-  }>;
+  activeData: any;
 }
-
+// 登录方式数据
+const activeDataArr = [
+  {
+    initialValues: { phone: { code: "+86" } },
+    isPhone: true,
+    oneFormItemName: ["phone", "phone"],
+    oneFormItemRules: [
+      { required: true, message: "请输入正确的手机号" },
+      {
+        pattern:
+          /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/,
+        message: "手机号格式不对",
+      },
+    ],
+    oneFormItemPla: "请输入账号/手机号",
+    twoFormItemName: "password",
+    twoFormItemRules: [
+      { required: true, message: "请输入密码" },
+      {
+        pattern: /^(?=.*\d)(?=.*[a-zA-Z])[a-zA-Z0-9]{5,16}$/,
+        message: "请输入6-16位的密码，必须包含一个数字和一个字母",
+      },
+    ],
+    twoFormItemPla: "请输入密码",
+    isHaveBtn: false,
+  },
+  {
+    initialValues: { phone: { code: "+86" } },
+    isPhone: true,
+    oneFormItemName: ["phone", "phone"],
+    oneFormItemRules: [
+      { required: true, message: "请输入正确的手机号" },
+      {
+        pattern:
+          /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/,
+        message: "手机号格式不对",
+      },
+    ],
+    oneFormItemPla: "请输入账号/手机号",
+    twoFormItemName: "captcha",
+    twoFormItemRules: [
+      { required: true, message: "请输入验证码" },
+      {
+        pattern: /^[0-9]{4}$/,
+        message: "请输入4位全数字的验证码",
+      },
+    ],
+    twoFormItemPla: "请输入验证码",
+    isHaveBtn: true,
+  },
+  {
+    initialValues: {},
+    isPhone: false,
+    oneFormItemName: "email",
+    oneFormItemRules: [
+      { required: true, message: "请输入正确的邮箱账号" },
+      {
+        pattern:
+          /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/,
+        message: "邮箱账号格式不对",
+      },
+    ],
+    oneFormItemPla: "请输入邮箱账号",
+    twoFormItemName: "password",
+    twoFormItemRules: [
+      { required: true, message: "请输入密码" },
+      {
+        pattern: /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])[a-zA-Z0-9.]{5,16}$/,
+        message: "请输入6-16位的密码，必须包含数字、大小写字母",
+      },
+    ],
+    // (?=.*[])必须包含
+    twoFormItemPla: "请输入密码",
+    isHaveBtn: false,
+  },
+  {},
+];
+// 登录方式
 const useActive = (): useActiveReturnType => {
   const [active, setActive] = useState(0);
   const hContent = ["手机号登录", "验证码登录", "邮箱登录", "二维码登录"];
@@ -84,104 +154,117 @@ const useActive = (): useActiveReturnType => {
       </span>
     </div>
   );
-  const FormRules = [
-    {
-      accountRules: [
-        { required: true, message: "请输入正确的手机号" },
-        {
-          pattern:
-            /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/,
-          message: "手机号格式不对",
-        },
-      ],
-      accountPlaceholder: "请输入账号/手机号",
-      passwordRules: [
-        { required: true, message: "请输入密码" },
-        {
-          pattern: /^(?=.*\d)(?=.*[a-zA-Z])[a-zA-Z0-9]{5,16}$/,
-          message: "请输入6-16位的密码，必须包含一个数字和一个字母",
-        },
-      ],
-      passwordPlaceholder: "请输入密码",
-    },
-    {
-      accountRules: [
-        { required: true, message: "请输入正确的手机号" },
-        {
-          pattern:
-            /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/,
-          message: "手机号格式不对",
-        },
-      ],
-      accountPlaceholder: "请输入账号/手机号",
-      passwordRules: [
-        { required: true, message: "请输入密码" },
-        {
-          pattern: /^(?=.*\d)(?=.*[a-zA-Z])[a-zA-Z0-9]{5,16}$/,
-          message: "请输入6-16位的密码，必须包含一个数字和一个字母",
-        },
-      ],
-      passwordPlaceholder: "请输入短信验证码",
-    },
-  ];
-  return { active, hContent, title, FormRules };
+  return { active, hContent, title, activeData: activeDataArr[active] };
 };
-
-const useAsyncPhoneLogin = (form: any, props: propsType): any => {
-  const loginStateDispatch = useDispatch();
-  const loginInfoDispatch = useDispatch();
-
-  const submit = (): any => {
-    (async () => {
-      const loginState = await phoneLogin(form.getFieldsValue());
-      if (loginState?.loginType === 1) {
-        props.setIsLoginModalOpen(false);
-        loginStateDispatch(setLoginState(true));
-        loginInfoDispatch(setLoginInfo(loginState));
-      }
-    })();
-  };
-
-  return { submit };
-};
-
-const useAsyncEmailLogin = (form: any, props: propsType): any => {
-  const loginStateDispatch = useDispatch();
-  const loginInfoDispatch = useDispatch();
-
-  const submit = (): any => {
-    (async () => {
-      const loginState = await emailLogin(form.getFieldsValue());
-      if (loginState?.loginType === 1) {
-        props.setIsLoginModalOpen(false);
-        loginStateDispatch(setLoginState(true));
-        loginInfoDispatch(setLoginInfo(loginState));
-      }
-    })();
-  };
-
-  return { submit };
-};
+// 查询国家吗
 const useAsyncCountryCode = (isLoginModalOpen: boolean): any => {
   const [countryCode, setCountryCode] = useState([]);
-
   useEffect(() => {
     (async () => {
       if (countryCode.length > 0 || !isLoginModalOpen) return;
       const { data } = await getCountryCode();
-      setCountryCode(data);
+      const countryList = (data as any[])?.reduce((arr, item) => {
+        arr.push(...item.countryList);
+        return arr;
+      }, []);
+      setCountryCode(countryList);
     })();
   }, [isLoginModalOpen]);
-
-  console.log(countryCode);
   return countryCode;
+};
+// 手机登录（验证码与密码）hooks
+const useAsyncPhoneLogin = (
+  form: any,
+  props: propsType,
+  active: number
+): any => {
+  const loginStateDispatch = useDispatch();
+  const loginInfoDispatch = useDispatch();
+  const PhoneSubmit = (): any => {
+    (async () => {
+      const { phone, password, captcha } = form.getFieldsValue();
+      const params = [
+        {
+          phone: phone.phone,
+          password,
+          countrycode: (phone.code as string).replace("+", ""),
+        },
+        {
+          phone: phone.phone,
+          captcha,
+          countrycode: (phone.code as string).replace("+", ""),
+        },
+      ];
+      const loginState = await phoneLogin(params[active]);
+      if (loginState?.loginType === 1) {
+        props.setIsLoginModalOpen(false);
+        loginStateDispatch(setLoginState(true));
+        loginInfoDispatch(setLoginInfo(loginState));
+      }
+    })();
+  };
+
+  return { PhoneSubmit };
+};
+// 发送验证码
+const usePrimaryBtn = (form: any): any => {
+  const [countDown, setCountDown] = useState(60);
+  const [primaryBtnDis, setPrimaryBtnDis] = useState(false);
+  const [primaryBtnText, setPrimaryBtnText] = useState("发送验证码");
+  const onSendCode = (): any => {
+    const { phone } = form.getFieldsValue();
+    const params = {
+      phone: phone.phone,
+      countrycode: (phone.code as string).replace("+", ""),
+    };
+    sendVerCode(params);
+  };
+
+  return { primaryBtnText, primaryBtnDis, onSendCode };
+};
+// 邮箱登录
+const useAsyncEmailLogin = (form: any, props: propsType): any => {
+  const loginStateDispatch = useDispatch();
+  const loginInfoDispatch = useDispatch();
+
+  const EmailSubmit = (): any => {
+    (async () => {
+      try {
+        await form.validateFields(["email"]);
+        const loginState = await emailLogin(form.getFieldsValue());
+        if (loginState?.loginType === 0) {
+          props.setIsLoginModalOpen(false);
+          loginStateDispatch(setLoginState(true));
+          loginInfoDispatch(setLoginInfo(loginState));
+        } else {
+          console.log(loginState);
+        }
+      } catch (error) {}
+    })();
+  };
+
+  return { EmailSubmit };
 };
 
 const LoginModal = (props: propsType): JSX.Element => {
-  const { active, hContent, title } = useActive();
+  const { active, hContent, title, activeData } = useActive();
+  const {
+    initialValues,
+    isPhone,
+    oneFormItemName,
+    oneFormItemRules,
+    oneFormItemPla,
+    twoFormItemName,
+    twoFormItemRules,
+    twoFormItemPla,
+    isHaveBtn,
+  } = activeData;
   const [form] = Form.useForm();
-  const { submit } = useAsyncPhoneLogin(form, props);
+
+  const { PhoneSubmit } = useAsyncPhoneLogin(form, props, active);
+  const { EmailSubmit } = useAsyncEmailLogin(form, props);
   const countryCode = useAsyncCountryCode(props.isLoginModalOpen);
+  const { primaryBtnText, primaryBtnDis, onSendCode } = usePrimaryBtn(form);
   return (
     <Modal
       title={title}
@@ -200,65 +283,51 @@ const LoginModal = (props: propsType): JSX.Element => {
         name="basic"
         labelCol={{ span: 8 }}
         wrapperCol={{ span: 16 }}
-        initialValues={{ remember: true }}
+        initialValues={initialValues}
         autoComplete="off"
         form={form}
       >
-        {/* <Form.Item
-          label=""
-          name="phone"
-          rules={[
-            { required: true, message: "请输入正确的手机号" },
-            {
-              pattern:
-                /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/,
-              message: "手机号格式不对",
-            },
-          ]}
-        >
-          <Input placeholder="请输入账号/手机号" />
-        </Form.Item> */}
-        <Form.Item label="">
+        <Form.Item>
           <Input.Group compact>
-            <Form.Item name={["phone", "code"]} noStyle>
-              <Select placeholder="+86">
-                <Option value="Zhejiang">Zhejiang</Option>
-                <Option value="Jiangsu">Jiangsu</Option>
-              </Select>
-            </Form.Item>
-            <Form.Item
-              name={["phone", "phone"]}
-              noStyle
-              rules={[
-                { required: true, message: "请输入正确的手机号" },
-                {
-                  pattern:
-                    /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/,
-                  message: "手机号格式不对",
-                },
-              ]}
-            >
-              <Input placeholder="请输入账号/手机号" />
+            {(isPhone as boolean) && (
+              <Form.Item name={["phone", "code"]} noStyle>
+                <Select placeholder="+86" optionLabelProp="value">
+                  {(countryCode as any[]).map((item) => (
+                    <Option value={"+" + item.code} key={item.locale}>
+                      {item.zh} +{item.code}
+                    </Option>
+                  ))}
+                </Select>
+              </Form.Item>
+            )}
+            <Form.Item name={oneFormItemName} noStyle rules={oneFormItemRules}>
+              <Input placeholder={oneFormItemPla} />
             </Form.Item>
           </Input.Group>
         </Form.Item>
-
-        <Form.Item
-          label=""
-          name="password"
-          rules={[
-            { required: true, message: "请输入密码" },
-            {
-              pattern: /^(?=.*\d)(?=.*[a-zA-Z])[a-zA-Z0-9]{5,16}$/,
-              message: "请输入6-16位的密码，必须包含一个数字和一个字母",
-            },
-          ]}
-        >
-          <Input.Password placeholder="请输入密码" />
+        <Form.Item className="password_box">
+          <Form.Item name={twoFormItemName} rules={twoFormItemRules}>
+            <Input.Password placeholder={twoFormItemPla} />
+          </Form.Item>
+          {(isHaveBtn as boolean) && (
+            <Button
+              type="primary"
+              shape="round"
+              size={"large"}
+              disabled={primaryBtnDis}
+              className="primary_btn"
+              onClick={onSendCode}
+            >
+              {primaryBtnText}
+            </Button>
+          )}
         </Form.Item>
-
         <Form.Item>
-          <Button type="primary" htmlType="submit" onClick={submit}>
+          <Button
+            type="primary"
+            htmlType="submit"
+            onClick={active === 2 ? EmailSubmit : PhoneSubmit}
+          >
             登录
           </Button>
         </Form.Item>
