@@ -1,0 +1,118 @@
+.ant-modal-header {
+  height: 8.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .Login_Modal_title {
+    background-color: rgb(244, 244, 244);
+    border: 0.1rem solid rgb(244, 244, 244);
+    box-sizing: border-box;
+    font-size: 4rem;
+    border-radius: 4rem 4rem;
+    width: 35rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    margin: 0 auto;
+
+    span {
+      height: 4rem;
+      line-height: 4rem;
+      box-sizing: border-box;
+      padding: 0 1.6rem;
+    }
+
+    .active {
+      background-color: rgb(255, 255, 255);
+      border-radius: 4rem 4rem;
+    }
+  }
+}
+
+.ant-modal-body {
+  width: 100%;
+  height: 34rem;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+
+  .Content_title {
+    margin: 1rem 0;
+    font-size: 2.2rem;
+    transform: translateY(-2rem);
+    color: #999;
+  }
+
+  #basic {
+    width: 100%;
+
+    .ant-row {
+      justify-content: center;
+
+      .ant-col {
+        margin: 0;
+
+        #basic_phone {
+          height: 4.8rem;
+        }
+
+        .ant-input-affix-wrapper {
+          height: 4.8rem;
+        }
+
+        button {
+          width: 31.4rem;
+          height: 4.8rem;
+        }
+
+        .ant-input-group {
+          display: flex;
+          height: 4.8rem;
+          .ant-select-selector {
+            height: 4.8rem;
+            width: 6.2rem;
+            padding: 0 0.4rem;
+
+            #basic_phone_code {
+              height: 4.8rem;
+            }
+            .ant-select-selection-placeholder {
+              padding-right: 0.8rem;
+              line-height: 4.8rem;
+              color: #000000e0;
+              text-align: center;
+              font-size: 1.4rem;
+            }
+          }
+          .ant-select-arrow {
+            top: 55%;
+          }
+          .ant-select-selection-item {
+            font-size: 1.4rem;
+            line-height: 4.8rem;
+            padding-inline-end: 1rem;
+          }
+        }
+      }
+    }
+    .password_box {
+      .ant-form-item-control-input-content {
+        display: flex;
+      }
+      .ant-form-item {
+        width: 100%;
+      }
+      .primary_btn {
+        margin-left: 1rem;
+        span {
+          font-size: 1.4rem;
+        }
+      }
+    }
+  }
+}
+.ant-select-dropdown {
+  width: 18rem !important;
+}

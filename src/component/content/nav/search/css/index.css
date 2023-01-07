@@ -1,0 +1,11 @@
+.Search_Input input {
+  padding: 0.7rem 1.1rem;
+  font-size: 1.6rem;
+}
+.Search_Input .ant-input-search-button {
+  width: 4rem;
+  height: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

@@ -1,24 +1,38 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { Layout } from "antd";
+import { Nav } from "@/component/content/nav";
 
-function App() {
+import { loginState } from "@/request/index";
+
+import { useDispatch } from "react-redux";
+import { setLoginState, setLoginInfo } from "@/store/loginModules";
+
+import "@/assets/css/App.css";
+
+const { Header, Footer, Content } = Layout;
+
+const useLoginState = (): void => {
+  const dispatch = useDispatch();
+  (async () => {
+    const loginInfo = await loginState();
+    if (loginInfo?.profile as boolean) {
+      dispatch(setLoginState(true));
+      dispatch(setLoginInfo(loginInfo));
+    }
+  })();
+};
+
+function App(): JSX.Element {
+  useLoginState();
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Layout className="App_Layout">
+        <Header className="App_Header">
+          <Nav></Nav>
+        </Header>
+        <Content className="App_Content">Content</Content>
+        <Footer className="App_Footer">Footer</Footer>
+      </Layout>
     </div>
   );
 }
